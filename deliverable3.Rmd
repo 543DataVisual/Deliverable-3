@@ -1,0 +1,43 @@
+---
+title: "Deliverable 3"
+date: 2.8.23
+output: html_notebook
+---
+
+
+
+```{r}
+install.packages("sf")
+install.packages("rgl")
+library(sf)
+##SHAPE FILE
+maplink = 'https://github.com/543DataVisual/Deliverable-3/raw/main/ESDIST.geojson'
+mapWorld=read_sf(maplink)
+mapWorld
+
+```
+
+
+```{r}
+##DATA FILE
+location='https://github.com/543DataVisual/Deliverable-3/raw/main/'
+file='cleanedtractsfile-deliverable3.csv'
+datalink =paste0(location,file)
+
+mydata=read.csv(datalink)
+mydata
+
+deliverable3 <- aggregate(data=mydata,cbind(per_cap_income,total_non_english)~NAME,mean)
+deliverable3
+
+```
+
+```{r}
+###LOOKING AT DATA
+str(deliverable3)
+boxplot(deliverable3[,c('per_cap_income','total_non_english')])
+
+deliverable3$pci_s=as.vector(scale(deliverable3$per_cap_income))
+deliverable3$tne_s=as.vector(scale(deliverable3$total_non_english))
+```
+

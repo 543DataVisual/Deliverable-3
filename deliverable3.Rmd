@@ -5,70 +5,65 @@ output: html_notebook
 ---
 
 ```{r}
-###INSTALLING PACKAGES
+#Installing packages
 library(sf)
 library(ggplot2)
 ```
 
 
 ```{r}
-
-##SHAPE FILE
+#loading in shape file
 maplink = 'https://github.com/543DataVisual/Deliverable-3/raw/main/ESDIST.geojson'
 mapWorld=read_sf(maplink)
-mapWorld
+
 
 ```
 
 
 ```{r}
-##DATA FILE
-location='https://github.com/543DataVisual/Deliverable-3/raw/main/'
-file='cleanedtractsfiledeliverable3.2.csv'
-datalink =paste0(location,file)
+#loading in data file
+location ='https://github.com/543DataVisual/Deliverable-3/raw/main/'
+file ='cleanedtractsfiledeliverable3.2.csv'
+datalink = paste0(location,file)
 
-mydata=read.csv(datalink)
-mydata
+mydata = read.csv(datalink)
 
-deliverable3 <- aggregate(data=mydata,cbind(per_cap_income,total_non_english)~NAME,mean)
-deliverable3
+#aggregating the data to be organized by school district name with mean per capita income and total non English as the variables
+deliverable3 = aggregate(data=mydata,cbind(per_cap_income,total_non_english)~NAME,mean)
 
 ```
 
 ```{r}
-###MERGING TO MAP
-mapWorld_indexes=merge(mapWorld, 
+#merging data file to map file by school district name
+mapWorld_indexes = merge(mapWorld, 
                    deliverable3, 
                    by='NAME')
-str(mapWorld_indexes)
 ```
 
 ```{r}
-###MAKING MAP LAYER
-baseMap= ggplot(data=mapWorld) + theme_classic() + 
+#creating a map layer
+baseMap = ggplot(data=mapWorld) + theme_classic() + 
          geom_sf(fill='grey', 
                  color=NA)
-baseMap
 ```
 
 ```{r}
-###DATA LAYER
-numericMap= baseMap + geom_sf(data=mapWorld_indexes,
+#layering the data layer on top of the map layer
+numericMap = baseMap + geom_sf(data=mapWorld_indexes,
                        aes(fill=total_non_english), 
                        color=NA)
-numericMap
 ```
 
 ```{r}
-###ADDING LABELS
-labels= labs(title = "Non English Speakers by Elementary School Boundary", 
+#adding labels to map
+labels = labs(title = "Non English Speakers by Elementary School Boundary", 
                subtitle = "The City of Bellevue, Washington USA")
 graph = numericMap +
-  labels
-graph
-Legend_title="Total Non English Speakers 
-(grey indicates missing)"
+        labels
+Legend_title ="Total Non English Speakers 
+(grey indicates missing values)"
+
 graph + scale_fill_gradient(name = Legend_title) +
-  theme_classic()
+  theme_minimal()
 ```
 

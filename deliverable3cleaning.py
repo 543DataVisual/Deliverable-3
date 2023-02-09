@@ -11,7 +11,7 @@ filename='copy_tractassignments.csv'
 
 tractassignments=pd.read_csv(gitCloudRepo + filename)
 tractassignments.columns
-
+tractassignments
 
 tractassignments.columns=tractassignments.columns.str.replace(pat="school_district", 
                                  repl="NAME", 
@@ -22,4 +22,16 @@ tractassignments["NAME"] = tractassignments["NAME"].str.upper()
 
 tractassignments.head()
 
-tractassignments.to_csv("cleanedtractsfile-deliverable3.csv", index=False)
+tractassignments.NAME.value_counts
+#tractassignments.NAME.str.replace(pat="NaN",
+#                                  repl="",
+#                                  regex=False)
+
+#tractassignments.iloc[:,:2].str.replace
+
+tractassignments.iloc[:,:32]
+
+
+tractassignments=tractassignments.iloc[:,:32]
+
+tractassignments.to_csv("cleanedtractsfiledeliverable3.csv", index=False)

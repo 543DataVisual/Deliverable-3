@@ -4,12 +4,15 @@ date: 2.8.23
 output: html_notebook
 ---
 
+```{r}
+###INSTALLING PACKAGES
+library(sf)
+library(ggplot2)
+```
 
 
 ```{r}
-install.packages("sf")
-install.packages("rgl")
-library(sf)
+
 ##SHAPE FILE
 maplink = 'https://github.com/543DataVisual/Deliverable-3/raw/main/ESDIST.geojson'
 mapWorld=read_sf(maplink)
@@ -21,7 +24,7 @@ mapWorld
 ```{r}
 ##DATA FILE
 location='https://github.com/543DataVisual/Deliverable-3/raw/main/'
-file='cleanedtractsfile-deliverable3.csv'
+file='cleanedtractsfiledeliverable3.2.csv'
 datalink =paste0(location,file)
 
 mydata=read.csv(datalink)
@@ -33,11 +36,39 @@ deliverable3
 ```
 
 ```{r}
-###LOOKING AT DATA
-str(deliverable3)
-boxplot(deliverable3[,c('per_cap_income','total_non_english')])
+###MERGING TO MAP
+mapWorld_indexes=merge(mapWorld, 
+                   deliverable3, 
+                   by='NAME')
+str(mapWorld_indexes)
+```
 
-deliverable3$pci_s=as.vector(scale(deliverable3$per_cap_income))
-deliverable3$tne_s=as.vector(scale(deliverable3$total_non_english))
+```{r}
+###MAKING MAP LAYER
+baseMap= ggplot(data=mapWorld) + theme_classic() + 
+         geom_sf(fill='grey', 
+                 color=NA)
+baseMap
+```
+
+```{r}
+###DATA LAYER
+numericMap= baseMap + geom_sf(data=mapWorld_indexes,
+                       aes(fill=total_non_english), 
+                       color=NA)
+numericMap
+```
+
+```{r}
+###ADDING LABELS
+labels= labs(title = "Non English Speakers by Elementary School Boundary", 
+               subtitle = "The City of Bellevue, Washington USA")
+graph = numericMap +
+  labels
+graph
+Legend_title="Total Non English Speakers 
+(grey indicates missing)"
+graph + scale_fill_gradient(name = Legend_title) +
+  theme_classic()
 ```
 

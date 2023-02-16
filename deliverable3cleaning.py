@@ -33,5 +33,6 @@ tractassignments.iloc[:,:32]
 
 
 tractassignments=tractassignments.iloc[:,:32]
+tractassignments.columns
 
 tractassignments.to_csv("cleanedtractsfiledeliverable3.csv", index=False)
